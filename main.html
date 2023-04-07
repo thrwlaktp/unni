@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이미지 검색</title>
+  <style>
+    body {
+      color: orange;
+      font-family: Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.0;
+      text-align: center;
+    }
+    .text-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 0 16px;
+    }
+    h1 {
+      font-size: 50px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: orange;
+    }
+    p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+    a {
+      color: orange;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    @media screen and (min-width: 768px) {
+      h1 {
+        font-size: 50px;
+      }
+      .text-wrapper {
+        padding: 0 64px;
+      }
+    }
+  </style>
+  <body>
+<header>
+  <h1>이미지 검색</h1>
+
+</header>
+<main>
+  <form>
+    <input type="text" id="search-term" placeholder="검색어 입력">
+   
+    <button type="submit">검색</button>
+<p>본 검색창은 픽사베이 API를 이용하였습니다. </p>
+  </form>
+  <section id="search-results">
+  </section>
+  <div id="page-buttons"></div>
+</main>
+
+<script>
+  const form = document.querySelector('form');
+  const searchResults = document.querySelector('#search-results');
+  const pageButtons = document.querySelector('#page-buttons');
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+
+    // Get the search term and page number from the input fields
+    const searchTerm = document.querySelector('#search-term').value;
+    const pageNumber = document.querySelector('#page-number').value;
+
+    // Send the search request to Pixabay API
+    fetch(`https://pixabay.com/api/?key=35129257-a80f6d0ace778af0bf602da1b&q=${encodeURIComponent(searchTerm)}&page=${pageNumber}&per_page=200`)
+      .then(response => response.json())
+      .then(data => {
+        // Clear previous search results and page buttons
+        searchResults.innerHTML = '';
+        pageButtons.innerHTML = '';
+
+        // Display the search results
+        data.hits.forEach(hit => {
+          const img = document.createElement('img');
+          img.src = hit.webformatURL;
+          img.alt = hit.tags;
+          img.addEventListener('click', () => {
+            window.open(hit.largeImageURL);
+          });
+          searchResults.appendChild(img);
+        });
+
+        // Generate the page number buttons
+        const numPages = Math.ceil(data.totalHits / 200);
+        for (let i = 1; i <= numPages; i++) {
+          const button = document.createElement('button');
+          button.textContent = i;
+          if (i == pageNumber) {
+            button.disabled = true;
+          }
+          button.addEventListener('click', () => {
+            document.querySelector('#page-number').value = i;
+            form.dispatchEvent(new Event('submit'));
+          });
+          pageButtons.appendChild(button);
+        }
+      })
+      .catch(error => console.error(error));
+  });
+</script>
+ <h1>Domain for Sale</h1>
+        <p>도메인을 판매합니다! 매매금액은 협의 가능합니다.</p>
+        <br>
+        <p>방문해 주셔서 감사합니다.</p>
+        <p>문의 사항은 E-mail로 부탁 드립니다.</p>
+        <p>Thank you for visiting our web site.</p>
+        <p>If you have any inquiries, please send us an email.</p>
+        <p>Thank you.</p>
+        <br>
+        <a href="mailto:thrwlaktp@naver.com">E-mail: thrwlaktp@naver.com</a>
+ <input type="number" id="page-number" placeholder="페이지 번호" min="1" max="199" value="1" style="display: none;">
+  </body>
+<footer>
+
+  <p>&copy; 2023 </p>
+</footer>
+</html>
