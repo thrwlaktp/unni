@@ -129,4 +129,68 @@
 
   <p>&copy; 2023 </p>
 </footer>
+      <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="my-4">한국 지역 물때표 & 날씨</h1>
+        <div class="mb-3">
+            <input type="text" id="location" class="form-control" placeholder="지역명을 입력하세요">
+            <button class="btn btn-primary mt-2" onclick="fetchData()">검색</button>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">선택한 지역 물때표</div>
+                    <div class="card-body" id="tide-info">정보를 입력하세요.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">선택한 지역 날씨</div>
+                    <div class="card-body" id="weather-info">정보를 입력하세요.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function fetchData() {
+            const location = document.getElementById("location").value;
+            if (!location) {
+                alert("지역명을 입력해주세요.");
+                return;
+            }
+            
+            $("#tide-info").text("물때표 데이터 불러오는 중...");
+            $("#weather-info").text("날씨 데이터 불러오는 중...");
+            
+            const apiKey = "PGZCJ7GJkA1tH8ufAxFQ==";
+            const tideApi = `https://api.example.com/tide?location=${location}&apiKey=${apiKey}`;
+            const weatherApi = `https://api.example.com/weather?location=${location}&apiKey=${apiKey}`;
+            
+            $.getJSON(tideApi, function(data) {
+                $("#tide-info").html(`<p>${data.tide}</p>`);
+            }).fail(() => {
+                $("#tide-info").text("물때표 데이터를 불러올 수 없습니다.");
+            });
+
+            $.getJSON(weatherApi, function(data) {
+                $("#weather-info").html(`<p>${data.weather}</p>`);
+            }).fail(() => {
+                $("#weather-info").text("날씨 데이터를 불러올 수 없습니다.");
+            });
+        }
+    </script>
+</body>
 </html>
